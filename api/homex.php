@@ -1,9 +1,14 @@
 <?php
 	require 'koneksi.php';
 	
-	header("Content-type: application/json; charset=utf-8");
+	//header("Content-type: application/json; charset=utf-8");
 	
-	$post = !empty($_POST["FN"]) ? $_POST["FN"] : "";
+	//$post = !empty($_POST["FN"]) ? $_POST["FN"] : "";
+	
+	$data =  json_decode(file_get_contents('php://input'));
+	
+	$post = $data->FN;//$_POST["FN"];//!empty($_POST["FN"] ? $_POST["FN"] : "";
+	
 	
 	if($post == "" | !$post)
 		returnJSON(100, null, "Fungsi tidak ditemukan");

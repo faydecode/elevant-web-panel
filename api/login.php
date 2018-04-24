@@ -5,9 +5,10 @@
 	//header("Content-type: application/json; charset=utf-8");
 	//header("Content-Type": "application/x-www-form-urlencoded");
 	
+	$data =  json_decode(file_get_contents('php://input'));
 	
-	$post = $_POST["FN"];//!empty($_POST["FN"] ? $_POST["FN"] : "";
-	
+	$post = $data->FN;//$_POST["FN"];//!empty($_POST["FN"] ? $_POST["FN"] : "";
+	//echo $post;
 	
 	//$post = "load_score";
 	
@@ -18,7 +19,7 @@
 	
 	switch ($post){
 		case "login":
-			login($mysqli);	
+			login($mysqli,$data);	
 			break;
 		case "register":
 			register($mysqli);	
@@ -28,10 +29,10 @@
 			break;
 	}
 	
-	function login($mysqli)
+	function login($mysqli,$data)
 	{
-		$user = 'admin';//$_POST['username'];
-		$pass = '8c7909c1c3a51bcfbcef322fa8b25b26';//md5($_POST['password']);
+		$user = $data->username;//$_POST['username'];
+		$pass = md5($data->password);//md5($_POST['password']);
 		
 		$strsql = "SELECT * FROM tb_akun
 				   WHERE user = '".$user."' AND pass = '".$pass."'
