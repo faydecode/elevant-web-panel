@@ -1,0 +1,3 @@
+images/*
+!images/profile-picture/.gitkeep
+!images/progress/.gitkeep

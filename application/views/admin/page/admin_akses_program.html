@@ -1,0 +1,389 @@
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.4 -->
+    <link rel="stylesheet" href="<?=base_url();?>assets/adminlte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?=base_url();?>assets/adminlte/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="<?=base_url();?>assets/adminlte/dist/css/skins/_all-skins.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="<?=base_url();?>assets/adminlte/plugins/select2/select2.min.css">
+	<!-- iCheck for checkboxes and radio inputs -->
+	<link rel="stylesheet" href="<?=base_url();?>assets/adminlte/plugins/iCheck/all.css">
+  
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+        
+		
+    		<style type="text/css">
+    		.labelfrm {
+    			display:block;
+    			font-size:small;
+    			margin-top:5px;
+    		}
+    		.error {
+    			font-size:small;
+    			color:red;
+    		}
+    		</style>
+    		
+    		<script type="text/javascript" src="<?=base_url();?>assets/admin/js/jquery.validate.min.js"></script>
+    		 
+    		<script type="text/javascript">
+    		$(document).ready(function() {
+    			$('.frm-input').validate();
+                
+                $('.confirm-btn').click(function(){
+    			var answer = confirm(jQuery(this).attr('title'));
+                return answer;
+                });
+    		});
+            </script>
+            
+            <script type="text/javascript">
+                var htmlobjek;
+                $(document).ready(function()
+                {	
+					$('#operasi').attr('class', 'active treeview');
+					$('#operasi-akses-program').attr('class', 'active treeview');
+					
+                    $("#nama").change(function()
+                    //$("#simpan").click(function()
+                    {  
+                
+                        var nama = $("#nama").val();
+                        $("#pesan").html("<img src='<?=base_url();?>assets/global/loading.gif'>Cek wilayah ...");
+                
+                        if(nama=='')
+                        {
+                          $("#pesan").html('<img src="<?=base_url();?>assets/global/salah.png"> wilayah tidak boleh kosong');
+                          $("#nama").css('border', '3px #C33 solid');
+                        }
+						else
+						$.ajax({type: "POST", url: "<?=base_url();?>index.php/C_admin_wilayah/cek_wilayah/", data: "nama="+nama, success:function(data)
+                        { 
+                        	if(data==0 || ($("#nama").val() == $("#cek_wilayah").val()))
+                            //if(data==0)
+                        	  {
+                        	  	$("#pesan").html('<img src="<?=base_url();?>assets/global/true.png">');
+                                $("#nama").css('border', '3px #090 solid');
+                                $("#ket").attr("disabled", false);
+                                $("#btnsimpan").attr("disabled", false);
+                            }
+                              else
+                              {
+                              	$("#pesan").html('<img src="<?=base_url();?>assets/global/salah.png"> Nama wilayah telah digunakan');
+                				//$("#pesan").html(data); 
+                              	$("#nama").css('border', '3px #C33 solid');
+                                $("#ket").attr("disabled", true);
+                                $("#btnsimpan").attr("disabled", true);
+                              }
+                              
+                        } 
+                        });
+                     });
+                });
+            </script>
+            
+     <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            Akses Program
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+			<li><a href="#"><i class="fa fa-dashboard"></i> Basis Data</a></li>
+            <li class="active"> Akses Program</li>
+            
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <!-- =========================================================== -->
+			<div class="box">
+					<div class="box-header">
+					<h3 class="box-title">Table Akses Program</h3>
+						<div class="pull-right">
+							<!-- <form action="<?=base_url();?>admin/pendaftaran-klinik-cari" method="post" class="frm-cari"> -->
+							<form action="<?=base_url();?>admin-harga-satuan" method="get" class="frm-cari">
+								<table>
+									<tr>
+										<td>
+											<input type="text" name="cari"  maxlength="35" class="text form-control" size="35" alt="tlp" title="Cari data" placeholder="...Cari" value="<?php if (!empty($_GET['cari'])){echo $_GET['cari'];} ?>"/>
+										</td>
+									</tr>
+								</table>
+							</form>
+						</div>
+					</div><!-- /.box-header -->
+					<div class="box-body">
+					
+					
+					<?php
+							if(!empty($list_akses_program))
+							{
+								//$num_field = $list_field->num_fields();
+								$list_result = $list_akses_program->result_array();
+								$num_col=0;
+								
+								echo'<table width="100%" id="example2" class="table table-bordered table-hover">';
+									echo '<thead>
+											 <tr>';
+												echo '<th width="3%">No</th>';
+												echo '<th width="10%">Nama User</th>';
+												echo '<th width="10%">Akses</th>';
+
+												foreach($list_field as $field)
+												{
+													if($num_col>=3)
+													{
+														
+														//$str_data = str_replace("1","",$field->name);
+														$str_data = $field->name;
+
+														echo '<th width="5%">'.$str_data.'</th>';
+													}
+													$num_col++;
+												}
+												
+										echo '</tr>
+								         </thead>';
+									
+									
+									//echo $num_field;
+									$no =$this->uri->segment(2,0)+1;
+									
+									echo '<tbody>';
+									foreach($list_result as $row)
+									{
+										echo '<tr>';
+										echo'<td><input type="hidden" id="no_'.$no.'" value="'.$row['ID_USER'].'" />'.$no.'</td>';
+										echo'<td><input type="hidden" id="kode_'.$no.'" value="'.$row['NAMA_USER'].'" />'.$row['NAMA_USER'].'</td>';
+										echo'<td><input type="hidden" id="nama_'.$no.'" value="'.$row['NAMA_AKSES'].'" />'.$row['NAMA_AKSES'].'</td>';
+										
+										
+										$num_col=0;
+										foreach($list_field as $field)
+										{
+											
+											if($num_col>=3)
+											{
+											
+												//$strIdSatuan = str_replace("1","",$field->name);
+												$striduser = $row['ID_USER'];
+												echo'<td><input type="button" class="btn btn-success btn-sm" onclick="view(this);" size="8" 
+												id="'.$striduser.'-'.$field->name.'" value="'.$row[$field->name].' program aktif" data-toggle="modal" data-target="#myModal" /></td>';
+											
+											}
+											
+											$num_col++;
+										}
+										$no++;
+									}
+									echo '</tr>';
+									echo '</tbody>';
+								echo'</table>';
+							}
+							else
+							{
+								echo'<center>';
+								echo'Tidak Ada Data Yang Ditampilkan !';
+								echo'</center>';
+							}
+						?>
+					<center>
+					<div class="halaman"><?php echo $halaman;?></div>
+					</center>
+					</div><!-- /.box-body -->
+				</div><!-- /.box -->
+				
+				
+			
+				<!-- Show MOdal View -->
+				  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-dialog">
+						<div class="modal-content">
+						  <div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="myModalLabel">Akses Program Wilayah <span id="nama_wilayah2"></span></h4>
+						  </div>
+						  <div class="modal-body">
+							
+							<!-- isi -->
+							<div class="box">
+								<input type="hidden" name="id_user_aktif" id="id_user_aktif" value="" />
+								<div class="box-body" id="input_akses_program">
+								
+								
+								
+								<?php
+									if(!empty($list_program))
+									{
+										echo'<table width="100%" id="example2" class="table table-bordered table-hover">';
+										echo '<thead>
+													<tr>';
+													echo '<th width="5%">No</th>';
+													echo '<th width="10%">ID Program</th>';
+													echo '<th width="20%">Nama Program</th>';
+													echo '<th width="10%">Aksi</th>';
+												echo '</tr>
+											</thead>';
+										$list_result = $list_program->result();
+										$no = 1;
+										echo '<tbody>';
+										foreach($list_result as $row)
+										{
+											echo'<tr>';
+											echo'<td><input type="hidden" id="no_'.$no.'" value="'.$row->ID_PROG_AKSES.'" />'.$no.'</td>';					
+											echo'<td><input type="hidden" id="id_prog_'.$no.'" value="'.$row->ID_PROGRAM.'" />'.$row->ID_PROGRAM.'</td>';
+											echo'<td><input type="hidden" id="nama_prog_'.$no.'" value="'.$row->NAMA_PROGRAM.'" />'.$row->NAMA_PROGRAM.'</td>';
+											
+											if($row->ID_PROG_AKSES <> '')
+											{
+												echo'<td id="stat_cek"><input id="chk_prog_"'.$no.' type="checkbox" class="flat-red" onclick="updateProgram('.$no.')"> Aktif</td>';
+											} else {
+												echo'<td id="stat_cek"><input id="chk_prog_"'.$no.' type="checkbox" class="flat-red" onclick="updateProgram('.$no.')"> NonAktif</td>';
+											}
+											
+											echo '<input type="hidden" id="id_wilayah_'.$no.'" value="'.$row->ID_WILAYAH.'" />';
+
+											echo'</tr>';
+											$no++;
+										}
+										
+										echo '</tbody>';
+										echo'</table>';
+									} else {
+										echo'<center>';
+										echo'Tidak ada data!';
+										echo'</center>';
+									}
+								?>
+								</div>
+							</div>
+							
+							
+						  </div>
+						  <div class="modal-footer">
+							<button type="button" class="btn btn-default" onclick="refreshPage()" data-dismiss="modal">Close</button>
+							<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+						  </div>
+						</div>
+					  </div>
+					</div>
+
+				<!-- Show MOdal View -->
+				
+				
+				
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+          
+          <!-- =========================================================== -->
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+            
+    		
+		
+<script type='text/javascript'>
+	
+	function rubah()
+	{
+		var chk=document.getElementById("test_cek").checked;
+		alert(chk);
+	}
+	
+	
+	function updateProgram(id)
+	{
+		//alert("test");
+		var idxx=document.getElementById("id_akses_"+id).value;
+		var id_user=document.getElementById("id_user_aktif").value;
+		var id_prog=document.getElementById("id_prog_"+id).value;
+		var id_wilayah=document.getElementById("id_wilayah_"+id).value;
+	 
+		var chk=document.getElementById("chk_prog_"+id).checked;
+		
+		//var chk = $("#chk_prog_"+id).val();
+		
+		//alert(chk);
+		
+		$.ajax({type: "POST", url: "<?=base_url();?>C_admin_akses_program/simpan/", 
+			data: "stat="+chk+"&id="+idxx+"&id_user="+id_user+"&id_prog="+id_prog+"&id_wilayah="+id_wilayah, 
+			success:function(data)
+		{ 
+			//alert("ddd");
+			//alert(data);
+			
+		}
+		});
+		
+		if(chk)
+		{
+			$("#stat_cek_"+id).html("Aktif");
+		} else {
+			$("#stat_cek_"+id).html("Non Aktif");
+		}
+		
+	}
+	
+	function view(evt)
+	{
+		var strId = evt.id;
+		var arrKode = strId.split("-");
+		
+        var id_user = arrKode[0];
+        var nama_wilayah = arrKode[1];
+		
+		//alert(strId);
+		
+		
+		
+		$('input[name=nama_wilayah2]').val(nama_wilayah);
+		$('input[name=id_user_aktif]').val(id_user);
+		
+		
+		$.ajax({type: "POST", url: "<?=base_url();?>C_admin_akses_program/get_program_terdaftar/", 
+			data: "id_user="+id_user+"&nama_wilayah="+nama_wilayah, success:function(data)
+		{ 
+			
+			$("#input_akses_program").html(data);
+			
+		}
+		});
+		
+		
+	}
+	
+	function refreshPage()
+	{
+		window.location.replace("<?=base_url();?>admin-akses-program");
+	}
+	
+</script>
+      
+    <!-- Bootstrap 3.3.4 -->
+    <script src="<?=base_url();?>assets/adminlte/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Slimscroll -->
+    <script src="<?=base_url();?>assets/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="<?=base_url();?>assets/adminlte/plugins/fastclick/fastclick.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="<?=base_url();?>assets/adminlte/dist/js/app.min.js"></script>
+    <!-- Page script -->
+	<!-- iCheck 1.0.1 -->
+	<script src="<?=base_url();?>assets/adminlte/plugins/iCheck/icheck.min.js"></script>
+	
+	
+	
