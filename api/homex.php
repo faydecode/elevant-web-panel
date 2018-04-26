@@ -10,8 +10,8 @@
 	$post = $data->FN;//$_POST["FN"];//!empty($_POST["FN"] ? $_POST["FN"] : "";
 	
 	
-	if($post == "" | !$post)
-		returnJSON(100, null, "Fungsi tidak ditemukan");
+	//if($post == "" | !$post)
+	//	returnJSON(100, null, "Fungsi tidak ditemukan");
 
 	switch ($post){
 		case "dashboard_menu":
