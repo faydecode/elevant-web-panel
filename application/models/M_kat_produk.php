@@ -63,6 +63,7 @@
 								(id_kat_produk,
 								 nama_kat_produk,
 								 ket_kat_produk,
+								 set_aktif,
 								 tgl_ins,
 								 user_updt,
 								 kode_kantor)
@@ -93,6 +94,7 @@
 				 ),
 							'".$nama."',
 							'".$ket."',
+							'1',
 							now(),
 							'".$id_user."',
 							'".$kode_kantor."');
