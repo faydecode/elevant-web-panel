@@ -30,10 +30,12 @@
 		
 		
 		$strsql = "
-			SELECT A.id_produk,A.nama_produk,B.harga
+			SELECT A.id_produk,A.nama_produk,B.harga,MIN(COALESCE(C.img_url,'')) AS img_url
 			FROM tb_produk A
 			LEFT JOIN tb_harga B
 			  ON B.id = A.id_produk AND B.group_by = 'produks'
+			LEFT JOIN tb_images C
+			  ON C.id = A.id_produk AND C.group_by = 'produks'
 			WHERE id_kat_produk = '".$id_kat_produk."'
 		";
 		$data2 = array();
@@ -45,6 +47,7 @@
 				$row["id_produk"] = $rows["id_produk"];
 				$row["nama_produk"] = $rows["nama_produk"];
 				$row["harga"] = $rows["harga"];
+				$row["img_url"] = $rows["img_url"];
 				array_push($data2, $row);
 			}
 			returnJSON(1, $data2, "Sukses");
